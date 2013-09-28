@@ -8,6 +8,7 @@ our $VERSION = "0.01";
 
 our @EXPORT = qw(
     markdown
+    markdown_toc
 );
 
 use XSLoader;
@@ -26,7 +27,28 @@ sub markdown {
     }
 
     my $cb = Text::Markdown::Hoedown::Callbacks->new();
-    my $opaque = $cb->html_renderer($html_options);
+    my $opaque = $cb->html_renderer(
+        $html_options,
+        5 # nesting_level
+    );
+    my $md = Text::Markdown::Hoedown::Markdown->new($extensions, $max_nesting, $cb, $opaque);
+    return $md->render($str);
+}
+
+sub markdown_toc {
+    my ($str, $nesting_level, $extensions, $max_nesting) = @_;
+    if (not defined $nesting_level) {
+        $nesting_level = 6;
+    }
+    if (not defined $extensions) {
+        $extensions = 0;
+    }
+    if (not defined $max_nesting) {
+        $max_nesting = 16;
+    }
+
+    my $cb = Text::Markdown::Hoedown::Callbacks->new();
+    my $opaque = $cb->html_toc_renderer($nesting_level);
     my $md = Text::Markdown::Hoedown::Markdown->new($extensions, $max_nesting, $cb, $opaque);
     return $md->render($str);
 }

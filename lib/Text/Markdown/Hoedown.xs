@@ -149,12 +149,25 @@ OUTPUT:
     RETVAL
 
 hoedown_opaque_t
-html_renderer(struct hoedown_callbacks* self, unsigned int render_flags)
+html_renderer(struct hoedown_callbacks* self, unsigned int render_flags, int nesting_level)
 PREINIT:
     struct hoedown_html_renderopt* options;
 CODE:
     Newxz(options, 1, struct hoedown_html_renderopt);
     hoedown_html_renderer(self, options, render_flags);
+    /* hoedown should provide API for setting nesting_level. But it doesn't provide. */
+    options->toc_data.nesting_level = nesting_level;
+    RETVAL = options;
+OUTPUT:
+    RETVAL
+
+hoedown_opaque_t
+html_toc_renderer(struct hoedown_callbacks* self, int nesting_level)
+PREINIT:
+    struct hoedown_html_renderopt* options;
+CODE:
+    Newxz(options, 1, struct hoedown_html_renderopt);
+    hoedown_html_toc_renderer(self, options, nesting_level);
     RETVAL = options;
 OUTPUT:
     RETVAL
