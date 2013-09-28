@@ -32,6 +32,8 @@ sub markdown {
 1;
 __END__
 
+=for stopwords sundown hoedown markdown subtree
+
 =encoding utf-8
 
 =head1 NAME
@@ -61,7 +63,7 @@ hoedown is a forking project from sundown.
 
 =over 4
 
-=item my $out = markdown($src :Str, $extensions:Int, $options:Int, $max_nesting:Int) :Str
+=item C< my $out = markdown($src :Str, $extensions:Int, $options:Int, $max_nesting:Int) :Str >
 
 Rendering markdown.
 
