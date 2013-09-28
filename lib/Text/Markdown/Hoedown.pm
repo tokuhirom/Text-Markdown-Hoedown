@@ -25,6 +25,14 @@ Text::Markdown::Hoedown - It's new $module
 
 Text::Markdown::Hoedown is ...
 
+=head1 HACKING
+
+C<hoedown/> directory is managed by git subtree.
+
+You can pull the modifications from upstream by following command:
+
+     git subtree pull --prefix=hoedown git@github.com:hoedown/hoedown.git master
+
 =head1 LICENSE
 
 Copyright (C) tokuhirom.
