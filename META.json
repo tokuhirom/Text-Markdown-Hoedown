@@ -1,5 +1,5 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "hoedown for Perl5",
    "author" : [
       "tokuhirom <tokuhirom@gmail.com>"
    ],
@@ -29,6 +29,8 @@
          "requires" : {
             "CPAN::Meta" : "0",
             "CPAN::Meta::Prereqs" : "0",
+            "ExtUtils::ParseXS" : "3.23",
+            "File::pushd" : "0",
             "Module::Build" : "0.38"
          }
       },
@@ -42,6 +44,8 @@
       },
       "runtime" : {
          "requires" : {
+            "Exporter" : "0",
+            "parent" : "0",
             "perl" : "5.008005"
          }
       },
@@ -52,5 +56,48 @@
       }
    },
    "release_status" : "unstable",
-   "version" : "0.01"
+   "version" : "0.01",
+   "x_contributors" : [
+      "Ben Noordhuis <info@bnoordhuis.nl>",
+      "Bruno Michel <bruno.michel@af83.com>",
+      "nono <brmichel@free.fr>",
+      "Joseph Koshy <joseph.koshy@gmail.com>",
+      "mcansky <riboulet@gmail.com>",
+      "Krzysztof Kowalczyk <kkowalczyk@gmail.com>",
+      "Samuel Bronson <naesten@gmail.com>",
+      "Shuhei Tanuma <shuhei.tanuma@gmail.com>",
+      "Jason Novinger <jnovinger@gmail.com>",
+      "Brandon Croft <brandon.croft@gmail.com>",
+      "Matt Stancliff <matt@genges.com>",
+      "brief <sami.asiri@gmail.com>",
+      "Neil Williams <neil@reddit.com>",
+      "jbergstroem <bugs@bergstroem.nu>",
+      "Chad Weider <cweider@oofn.net>",
+      "chitsaou <chitsaou@techbang.com.tw>",
+      "Andre D <andre@andred.ca>",
+      "Greg Leaver <greg.leaver@gmail.com>",
+      "Sebastien Rombauts <sebastien.rombauts@gmail.com>",
+      "Frank Smit <frank@61924.nl>",
+      "JJ Allaire <jj@rstudio.org>",
+      "andrius bentkus <andrius.bentkus@gmail.com>",
+      "Chris <ckolumbus@gmx.de>",
+      "Vicent Marti <tanoku@gmail.com>",
+      "Vicent MartÃ­ <vicent@github.com>",
+      "Mike Buland <mike@xagasoft.com>",
+      "Ben Dolman <ben.dolman@gmail.com>",
+      "Balazs Nagy <julsevern@gmail.com>",
+      "Mike Morearty <mike@morearty.com>",
+      "Ryan McGeary <ryan@mcgeary.org>",
+      "Dmitriy Kiriyenko <dmitriy.kiriyenko@anahoret.com>",
+      "Joel Rosenberg <joeldrosenberg@yahoo.com>",
+      "Matt Rogers <mattrogers@sbcglobal.net>",
+      "Sam Soffes <sam@soff.es>",
+      "Sami A <samilstsrv@gmail.com>",
+      "Robin Dupret <robin.dupret@gmail.com>",
+      "Yukinari Toyota <xxseyxx@gmail.com>",
+      "Anatol Broder <anatol@penibelst.de>",
+      "Rick Bradley <bradley@github.com>",
+      "Xavier Mendez <jmendeth@gmail.com>",
+      "Devin Torres <devin@devintorr.es>"
+   ]
 }

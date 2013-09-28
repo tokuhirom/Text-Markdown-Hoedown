@@ -1,14 +1,40 @@
+
 # NAME
 
-Text::Markdown::Hoedown - It's new $module
+Text::Markdown::Hoedown - hoedown for Perl5
 
 # SYNOPSIS
 
     use Text::Markdown::Hoedown;
 
+    print markdown(<<'...');
+    # foo
+
+    bar
+
+      * hoge
+      * fuga
+    ...
+
 # DESCRIPTION
 
-Text::Markdown::Hoedown is ...
+Text::Markdown::Hoedown is binding library for hoedown.
+
+hoedown is a forking project from sundown.
+
+# FUNCTIONS
+
+- my $out = markdown($src :Str, $options:Int) :Str
+
+    Rendering markdown.
+
+# HACKING
+
+`hoedown/` directory is managed by git subtree.
+
+You can pull the modifications from upstream by following command:
+
+     git subtree pull --prefix=hoedown git@github.com:hoedown/hoedown.git master
 
 # LICENSE
 
