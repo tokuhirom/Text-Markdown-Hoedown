@@ -3,7 +3,7 @@ requires 'parent';
 requires 'Exporter';
 
 on configure => sub {
-    requires 'ExtUtils::ParseXS', 3.23;
+    requires 'ExtUtils::ParseXS', 3.22;
     requires 'File::pushd';
 };
 
