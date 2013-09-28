@@ -67,6 +67,18 @@ Rendering markdown.
 
 =back
 
+=head1 TODO
+
+=over 4
+
+=item Export constants
+
+=item Document about constants
+
+=item Document about low level APIs
+
+=back
+
 =head1 HACKING
 
 C<hoedown/> directory is managed by git subtree.
