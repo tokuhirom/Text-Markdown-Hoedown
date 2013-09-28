@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use parent qw(Exporter);
 
-our $VERSION = "0.01";
+our $VERSION = "0.02";
 
 our @EXPORT = qw(
     markdown
@@ -135,7 +135,7 @@ I don't know what this do.
 
 =back
 
-=item markdown_toc($src:Str, %opts) :Str
+=item C<< markdown_toc($src:Str, %opts) :Str >>
 
 Generate TOC HTML from C<$str>.
 
@@ -145,15 +145,15 @@ Options are following:
 
 =item nesting_level
 
-Maximum nesting level for toc.
+Maximum nesting level for TOC.
 
 =item extensions
 
-Same as avobe.
+Same as above.
 
 =item max_nesting
 
-Same as avobe.
+Same as above.
 
 =back
 

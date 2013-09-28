@@ -29,7 +29,7 @@
          "requires" : {
             "CPAN::Meta" : "0",
             "CPAN::Meta::Prereqs" : "0",
-            "ExtUtils::ParseXS" : "3.23",
+            "ExtUtils::ParseXS" : "3.22",
             "File::pushd" : "0",
             "Module::Build" : "0.38"
          }
@@ -67,7 +67,7 @@
          "web" : "https://github.com/tokuhirom/Text-Markdown-Hoedown"
       }
    },
-   "version" : "0.01",
+   "version" : "0.02",
    "x_contributors" : [
       "Ben Noordhuis <info@bnoordhuis.nl>",
       "Bruno Michel <bruno.michel@af83.com>",

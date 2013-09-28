@@ -2,6 +2,13 @@ Revision history for Perl extension Text-Markdown-Hoedown
 
 {{$NEXT}}
 
+0.02 2013-09-28T09:53:42Z
+
+    [Incompatible Changes]
+    - All APIs are modified!
+    - Constants are exported.
+    - Supported TOC!
+
 0.01 2013-09-28T02:45:39Z
 
     - original version
