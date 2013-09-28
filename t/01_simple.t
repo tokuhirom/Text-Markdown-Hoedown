@@ -15,7 +15,7 @@ is(markdown("# foo"), "<h1>foo</h1>\n");
     is($aiu, "<h1>あいう</h1>\n");
 }
 
-is(markdown("http://mixi.jp", 0, HOEDOWN_EXT_AUTOLINK), qq{<p><a href="http://mixi.jp">http://mixi.jp</a></p>\n});
+is(markdown("http://mixi.jp", extensions => HOEDOWN_EXT_AUTOLINK), qq{<p><a href="http://mixi.jp">http://mixi.jp</a></p>\n});
 
 done_testing;
 

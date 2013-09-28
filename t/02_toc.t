@@ -47,7 +47,7 @@ is(markdown_toc($src), <<'...');
 </ul>
 ...
 
-is(markdown($src, HOEDOWN_HTML_TOC), <<'...');
+is(markdown($src, html_options => HOEDOWN_HTML_TOC), <<'...');
 <h1 id="toc_0">1</h1>
 
 <h2 id="toc_1">1.1</h2>
