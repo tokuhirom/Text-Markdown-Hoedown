@@ -12,11 +12,20 @@ use XSLoader;
 XSLoader::load(__PACKAGE__, $VERSION);
 
 sub markdown {
-    my ($str) = @_;
+    my ($str, $html_options, $extensions, $max_nesting) = @_;
+    if (not defined $html_options) {
+        $html_options = 0;
+    }
+    if (not defined $extensions) {
+        $extensions = 0;
+    }
+    if (not defined $max_nesting) {
+        $max_nesting = 16;
+    }
 
     my $cb = Text::Markdown::Hoedown::Callbacks->new();
-    my $opaque = $cb->html_renderer(0);
-    my $md = Text::Markdown::Hoedown::Markdown->new(0, 16, $cb, $opaque);
+    my $opaque = $cb->html_renderer($html_options);
+    my $md = Text::Markdown::Hoedown::Markdown->new($extensions, $max_nesting, $cb, $opaque);
     return $md->render($str);
 }
 
@@ -52,7 +61,7 @@ hoedown is a forking project from sundown.
 
 =over 4
 
-=item my $out = markdown($src :Str, $options:Int) :Str
+=item my $out = markdown($src :Str, $extensions:Int, $options:Int, $max_nesting:Int) :Str
 
 Rendering markdown.
 
