@@ -1,4 +1,3 @@
-
 # NAME
 
 Text::Markdown::Hoedown - hoedown for Perl5
@@ -24,9 +23,15 @@ hoedown is a forking project from sundown.
 
 # FUNCTIONS
 
-- my $out = markdown($src :Str, $options:Int) :Str
+- ` my $out = markdown($src :Str, $extensions:Int, $options:Int, $max_nesting:Int) :Str `
 
     Rendering markdown.
+
+# TODO
+
+- Export constants
+- Document about constants
+- Document about low level APIs
 
 # HACKING
 
