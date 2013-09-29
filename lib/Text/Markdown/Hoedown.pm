@@ -23,12 +23,10 @@ sub markdown {
         @_,
     );
 
-    my $cb = Text::Markdown::Hoedown::Callbacks->new();
-    my $opaque = $cb->html_renderer(
+    my $cb = Text::Markdown::Hoedown::Callbacks->html_renderer(
         $args{html_options},
-        5 # nesting_level
     );
-    my $md = Text::Markdown::Hoedown::Markdown->new($args{extensions}, $args{max_nesting}, $cb, $opaque);
+    my $md = Text::Markdown::Hoedown::Markdown->new($args{extensions}, $args{max_nesting}, $cb);
     return $md->render($str);
 }
 
@@ -41,9 +39,10 @@ sub markdown_toc {
         @_,
     );
 
-    my $cb = Text::Markdown::Hoedown::Callbacks->new();
-    my $opaque = $cb->html_toc_renderer($args{nesting_level});
-    my $md = Text::Markdown::Hoedown::Markdown->new($args{extensions}, $args{max_nesting}, $cb, $opaque);
+    my $cb = Text::Markdown::Hoedown::Callbacks->html_toc_renderer(
+        $args{nesting_level},
+    );
+    my $md = Text::Markdown::Hoedown::Markdown->new($args{extensions}, $args{max_nesting}, $cb);
     return $md->render($str);
 }
 
