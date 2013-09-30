@@ -4,7 +4,7 @@
       "tokuhirom <tokuhirom@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v0.6.7, CPAN::Meta::Converter version 2.132510",
+   "generated_by" : "Minilla/v0.7.0, CPAN::Meta::Converter version 2.132510",
    "license" : [
       "perl_5"
    ],
@@ -17,11 +17,9 @@
       "directory" : [
          "t",
          "xt",
-         "inc",
-         "share",
-         "eg",
-         "examples",
-         "author"
+         "tools",
+         "builder",
+         "hoedown"
       ]
    },
    "prereqs" : {
@@ -67,7 +65,7 @@
          "web" : "https://github.com/tokuhirom/Text-Markdown-Hoedown"
       }
    },
-   "version" : "0.02",
+   "version" : "0.03",
    "x_contributors" : [
       "Ben Noordhuis <info@bnoordhuis.nl>",
       "Bruno Michel <bruno.michel@af83.com>",

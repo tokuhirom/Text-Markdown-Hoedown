@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/tokuhirom/Text-Markdown-Hoedown.png?branch=master)](https://travis-ci.org/tokuhirom/Text-Markdown-Hoedown)
 # NAME
 
 Text::Markdown::Hoedown - hoedown for Perl5

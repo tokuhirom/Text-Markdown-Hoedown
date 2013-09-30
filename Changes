@@ -2,6 +2,11 @@ Revision history for Perl extension Text-Markdown-Hoedown
 
 {{$NEXT}}
 
+0.03 2013-09-30T09:19:31Z
+
+    - Custom handler support(Not documented yet).
+      (tokuhirom)
+
 0.02 2013-09-28T09:53:42Z
 
     [Incompatible Changes]
