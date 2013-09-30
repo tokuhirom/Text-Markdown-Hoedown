@@ -11,8 +11,6 @@ our @EXPORT = qw(
     markdown_toc
 );
 
-use Text::Markdown::Hoedown::Markdown;
-
 use XSLoader;
 XSLoader::load(__PACKAGE__, $VERSION);
 
