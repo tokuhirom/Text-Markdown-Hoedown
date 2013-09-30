@@ -46,7 +46,7 @@ typedef struct {
 typedef void* hoedown_opaque_t;
 
 #define CB_HEADER(key) \
-    dSP; \
+    dTHX; dSP; bool is_null = 0; \
     SV** rcb = hv_fetch((HV*)opaque, key, strlen(key), 0); \
     if (!rcb) { return; } \
     SV* cb = *rcb; \
@@ -65,10 +65,14 @@ typedef void* hoedown_opaque_t;
     \
     if (count == 1) { \
         SV* ret = POPs; \
-        STRLEN l; \
-        char * p = SvPV(ret, l); \
-        hoedown_buffer_grow(ob, l); \
-        hoedown_buffer_put(ob, p, l); \
+        if (ret != &PL_sv_undef) { \
+            STRLEN l; \
+            char * p = SvPV(ret, l); \
+            hoedown_buffer_grow(ob, ob->size + l); \
+            hoedown_buffer_put(ob, p, l); \
+        } else {\
+            is_null = 1;\
+        } \
     } \
     \
     PUTBACK; \
@@ -84,52 +88,103 @@ struct hoedown_callbacks {
 	void (*hrule)(struct hoedown_buffer *ob, void *opaque);
 	void (*list)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, int flags, void *opaque);
 	void (*listitem)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, int flags, void *opaque);
-	void (*paragraph)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque);
 	void (*table)(struct hoedown_buffer *ob, const struct hoedown_buffer *header, const struct hoedown_buffer *body, void *opaque);
 	void (*table_row)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque);
 	void (*table_cell)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, int flags, void *opaque);
 	void (*footnotes)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque);
 	void (*footnote_def)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, unsigned int num, void *opaque);
 
-	span level callbacks - NULL or return 0 prints the span verbatim
-	int (*autolink)(struct hoedown_buffer *ob, const struct hoedown_buffer *link, enum hoedown_autolink type, void *opaque);
-	int (*codespan)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque);
-	int (*double_emphasis)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque);
-	int (*emphasis)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque);
-	int (*underline)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque);
-	int (*highlight)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque);
-	int (*quote)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque);
-	int (*image)(struct hoedown_buffer *ob, const struct hoedown_buffer *link, const struct hoedown_buffer *title, const struct hoedown_buffer *alt, void *opaque);
-	int (*linebreak)(struct hoedown_buffer *ob, void *opaque);
 	int (*link)(struct hoedown_buffer *ob, const struct hoedown_buffer *link, const struct hoedown_buffer *title, const struct hoedown_buffer *content, void *opaque);
-	int (*raw_html_tag)(struct hoedown_buffer *ob, const struct hoedown_buffer *tag, void *opaque);
-	int (*triple_emphasis)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque);
-	int (*strikethrough)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque);
-	int (*superscript)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque);
 	int (*footnote_ref)(struct hoedown_buffer *ob, unsigned int num, void *opaque);
-
-	// low level callbacks - NULL copies input directly into the output
 };
 */
+
+/*
+ * Do not use hoedown_buffer_cstr in custom callbacks.
+ * Working buffer does not initialized by hoedown_buffer_new.
+ */
+
+#define PUSHBUF(text) \
+    if (text) { \
+        mXPUSHp(text->data, text->size); \
+    } else { \
+        XPUSHs(&PL_sv_undef); \
+    }
 
 /* void (*header)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, int level, void *opaque); */
 static void tmh_cb_header(struct hoedown_buffer *ob, const struct hoedown_buffer *text, int level, void *opaque) {
     CB_HEADER("header");
-    mXPUSHs(newSVpv(text->data, text->size));
+    PUSHBUF(text);
     mXPUSHi(level);
     CB_FOOTER;
 }
 
+static void tmh_cb_paragraph(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) {
+    CB_HEADER("paragraph");
+    PUSHBUF(text);
+    CB_FOOTER;
+}
+
+#define SPAN_RETVAL is_null ? 0 : 1;
+
+/* span level callbacks - NULL or return 0 prints the span verbatim */
+static int tmh_cb_autolink(struct hoedown_buffer *ob, const struct hoedown_buffer *link, enum hoedown_autolink type, void *opaque) {
+    CB_HEADER("autolink");
+    PUSHBUF(link);
+    mXPUSHi(type);
+    CB_FOOTER;
+    return SPAN_RETVAL;
+}
+
+static int tmh_cb_linebreak(struct hoedown_buffer *ob, void *opaque) {
+    CB_HEADER("autolink");
+    CB_FOOTER;
+    return SPAN_RETVAL;
+}
+
+static int tmh_cb_image(struct hoedown_buffer *ob, const struct hoedown_buffer *link, const struct hoedown_buffer *title, const struct hoedown_buffer *alt, void *opaque) {
+    CB_HEADER("image");
+    PUSHBUF(link);
+    PUSHBUF(title);
+    PUSHBUF(alt);
+    CB_FOOTER;
+    return SPAN_RETVAL;
+}
+
+#define xstr(s) str(s)
+#define str(s) #s
+
+#define BASIC_SPAN(name) \
+    static int tmh_cb_##name(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) { \
+        if (!text) { return; } \
+        CB_HEADER(xstr(name)); \
+        PUSHBUF(text); \
+        CB_FOOTER; \
+        return SPAN_RETVAL; \
+    }
+
+BASIC_SPAN(raw_html_tag)
+BASIC_SPAN(codespan)
+BASIC_SPAN(emphasis)
+BASIC_SPAN(double_emphasis)
+BASIC_SPAN(triple_emphasis)
+BASIC_SPAN(strikethrough)
+BASIC_SPAN(superscript)
+BASIC_SPAN(highlight)
+BASIC_SPAN(underline)
+BASIC_SPAN(quote)
+
 /* low level callbacks - NULL copies input directly into the output */
 static void tmh_cb_entity(struct hoedown_buffer *ob, const struct hoedown_buffer *entity, void *opaque) {
     CB_HEADER("entity");
-    mXPUSHs(newSVpv(entity->data, entity->size));
+    PUSHBUF(entity);
     CB_FOOTER;
 }
 
 static void tmh_cb_normal_text(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) {
+    if (!text) return;
     CB_HEADER("normal_text");
-    mXPUSHs(newSVpv(text->data, text->size));
+    PUSHBUF(text);
     CB_FOOTER;
 }
 
@@ -286,6 +341,54 @@ header(tmh_callbacks* self, SV *code)
 CODE:
     self->callbacks.header = tmh_cb_header;
     hv_stores(self->custom_opaque, "header", newSVsv(code));
+
+void
+paragraph(tmh_callbacks* self, SV *code)
+CODE:
+    self->callbacks.paragraph = tmh_cb_paragraph;
+    hv_stores(self->custom_opaque, "paragraph", newSVsv(code));
+
+void
+autolink(tmh_callbacks* self, SV *code)
+CODE:
+    self->callbacks.autolink = tmh_cb_autolink;
+    hv_stores(self->custom_opaque, "autolink", newSVsv(code));
+
+void
+image(tmh_callbacks* self, SV *code)
+CODE:
+    self->callbacks.image = tmh_cb_image;
+    hv_stores(self->custom_opaque, "image", newSVsv(code));
+
+void
+linebreak(tmh_callbacks* self, SV *code)
+CODE:
+    self->callbacks.linebreak = tmh_cb_linebreak;
+    hv_stores(self->custom_opaque, "linebreak", newSVsv(code));
+
+void
+double_emphasis(tmh_callbacks* self, SV *code)
+CODE:
+    self->callbacks.double_emphasis = tmh_cb_double_emphasis;
+    hv_stores(self->custom_opaque, "double_emphasis", newSVsv(code));
+
+void
+underline(tmh_callbacks* self, SV *code)
+CODE:
+    self->callbacks.underline = tmh_cb_underline;
+    hv_stores(self->custom_opaque, "underline", newSVsv(code));
+
+void
+raw_html_tag(tmh_callbacks* self, SV *code)
+CODE:
+    self->callbacks.raw_html_tag = tmh_cb_raw_html_tag;
+    hv_stores(self->custom_opaque, "raw_html_tag", newSVsv(code));
+
+void
+codespan(tmh_callbacks* self, SV *code)
+CODE:
+    self->callbacks.codespan = tmh_cb_codespan;
+    hv_stores(self->custom_opaque, "codespan", newSVsv(code));
 
 void
 entity(tmh_callbacks* self, SV *code)
