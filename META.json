@@ -65,7 +65,7 @@
          "web" : "https://github.com/tokuhirom/Text-Markdown-Hoedown"
       }
    },
-   "version" : "0.03",
+   "version" : "0.04",
    "x_contributors" : [
       "Ben Noordhuis <info@bnoordhuis.nl>",
       "Bruno Michel <bruno.michel@af83.com>",

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use parent qw(Exporter);
 
-our $VERSION = "0.03";
+our $VERSION = "0.04";
 
 our @EXPORT = qw(
     markdown

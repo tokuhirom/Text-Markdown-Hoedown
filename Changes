@@ -2,6 +2,11 @@ Revision history for Perl extension Text-Markdown-Hoedown
 
 {{$NEXT}}
 
+0.04 2013-09-30T11:03:15Z
+
+    - CONST() macro conflict with MinGW.
+      (reported by mattn++)
+
 0.03 2013-09-30T09:19:31Z
 
     - Custom handler support(Not documented yet).
