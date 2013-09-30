@@ -2,7 +2,7 @@ package builder::MyBuilder;
 use strict;
 use warnings;
 use utf8;
-use 5.010_001;
+use 5.008_001;
 
 use parent qw(Module::Build);
 use File::pushd;
@@ -17,6 +17,11 @@ sub new {
 
 sub ACTION_code {
     my $self = shift;
+
+    if (-d '.git') {
+        system($^X, 'author/generate.pl');
+    }
+
     $self->SUPER::ACTION_code();
 }
 

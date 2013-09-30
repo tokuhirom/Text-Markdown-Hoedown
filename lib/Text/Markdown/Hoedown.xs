@@ -45,6 +45,13 @@ typedef struct {
 
 typedef void* hoedown_opaque_t;
 
+#define PUSHBUF(text) \
+    if (text) { \
+        mXPUSHp(text->data, text->size); \
+    } else { \
+        XPUSHs(&PL_sv_undef); \
+    }
+
 #define CB_HEADER(key) \
     dTHX; dSP; bool is_null = 0; \
     SV** rcb = hv_fetch((HV*)opaque, key, strlen(key), 0); \
@@ -79,124 +86,8 @@ typedef void* hoedown_opaque_t;
     FREETMPS; \
     LEAVE;
 
-/*
-struct hoedown_callbacks {
- block level callbacks - NULL skips the block
-	void (*blockcode)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, const struct hoedown_buffer *lang, void *opaque);
-	void (*blockquote)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque);
-	void (*blockhtml)(struct hoedown_buffer *ob,const  struct hoedown_buffer *text, void *opaque);
-	void (*hrule)(struct hoedown_buffer *ob, void *opaque);
-	void (*list)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, int flags, void *opaque);
-	void (*listitem)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, int flags, void *opaque);
-	void (*table)(struct hoedown_buffer *ob, const struct hoedown_buffer *header, const struct hoedown_buffer *body, void *opaque);
-	void (*table_row)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque);
-	void (*table_cell)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, int flags, void *opaque);
-	void (*footnotes)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque);
-	void (*footnote_def)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, unsigned int num, void *opaque);
 
-	int (*link)(struct hoedown_buffer *ob, const struct hoedown_buffer *link, const struct hoedown_buffer *title, const struct hoedown_buffer *content, void *opaque);
-	int (*footnote_ref)(struct hoedown_buffer *ob, unsigned int num, void *opaque);
-};
-*/
-
-/*
- * Do not use hoedown_buffer_cstr in custom callbacks.
- * Working buffer does not initialized by hoedown_buffer_new.
- */
-
-#define PUSHBUF(text) \
-    if (text) { \
-        mXPUSHp(text->data, text->size); \
-    } else { \
-        XPUSHs(&PL_sv_undef); \
-    }
-
-/* void (*header)(struct hoedown_buffer *ob, const struct hoedown_buffer *text, int level, void *opaque); */
-static void tmh_cb_header(struct hoedown_buffer *ob, const struct hoedown_buffer *text, int level, void *opaque) {
-    CB_HEADER("header");
-    PUSHBUF(text);
-    mXPUSHi(level);
-    CB_FOOTER;
-}
-
-static void tmh_cb_paragraph(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) {
-    CB_HEADER("paragraph");
-    PUSHBUF(text);
-    CB_FOOTER;
-}
-
-#define SPAN_RETVAL is_null ? 0 : 1;
-
-/* span level callbacks - NULL or return 0 prints the span verbatim */
-static int tmh_cb_autolink(struct hoedown_buffer *ob, const struct hoedown_buffer *link, enum hoedown_autolink type, void *opaque) {
-    CB_HEADER("autolink");
-    PUSHBUF(link);
-    mXPUSHi(type);
-    CB_FOOTER;
-    return SPAN_RETVAL;
-}
-
-static int tmh_cb_linebreak(struct hoedown_buffer *ob, void *opaque) {
-    CB_HEADER("autolink");
-    CB_FOOTER;
-    return SPAN_RETVAL;
-}
-
-static int tmh_cb_image(struct hoedown_buffer *ob, const struct hoedown_buffer *link, const struct hoedown_buffer *title, const struct hoedown_buffer *alt, void *opaque) {
-    CB_HEADER("image");
-    PUSHBUF(link);
-    PUSHBUF(title);
-    PUSHBUF(alt);
-    CB_FOOTER;
-    return SPAN_RETVAL;
-}
-
-#define xstr(s) str(s)
-#define str(s) #s
-
-#define BASIC_SPAN(name) \
-    static int tmh_cb_##name(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) { \
-        if (!text) { return; } \
-        CB_HEADER(xstr(name)); \
-        PUSHBUF(text); \
-        CB_FOOTER; \
-        return SPAN_RETVAL; \
-    }
-
-BASIC_SPAN(raw_html_tag)
-BASIC_SPAN(codespan)
-BASIC_SPAN(emphasis)
-BASIC_SPAN(double_emphasis)
-BASIC_SPAN(triple_emphasis)
-BASIC_SPAN(strikethrough)
-BASIC_SPAN(superscript)
-BASIC_SPAN(highlight)
-BASIC_SPAN(underline)
-BASIC_SPAN(quote)
-
-/* low level callbacks - NULL copies input directly into the output */
-static void tmh_cb_entity(struct hoedown_buffer *ob, const struct hoedown_buffer *entity, void *opaque) {
-    CB_HEADER("entity");
-    PUSHBUF(entity);
-    CB_FOOTER;
-}
-
-static void tmh_cb_normal_text(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) {
-    if (!text) return;
-    CB_HEADER("normal_text");
-    PUSHBUF(text);
-    CB_FOOTER;
-}
-
-/* header and footer */
-static void tmh_cb_doc_header(struct hoedown_buffer *ob, void *opaque) {
-    CB_HEADER("doc_header");
-    CB_FOOTER;
-}
-static void tmh_cb_doc_footer(struct hoedown_buffer *ob, void *opaque) {
-    CB_HEADER("doc_footer");
-    CB_FOOTER;
-}
+#include "gen.callback.c"
 
 MODULE = Text::Markdown::Hoedown    PACKAGE = Text::Markdown::Hoedown PREFIX=hoedown_markdown_
 
@@ -336,83 +227,7 @@ CODE:
 OUTPUT:
     RETVAL
 
-void
-header(tmh_callbacks* self, SV *code)
-CODE:
-    self->callbacks.header = tmh_cb_header;
-    hv_stores(self->custom_opaque, "header", newSVsv(code));
-
-void
-paragraph(tmh_callbacks* self, SV *code)
-CODE:
-    self->callbacks.paragraph = tmh_cb_paragraph;
-    hv_stores(self->custom_opaque, "paragraph", newSVsv(code));
-
-void
-autolink(tmh_callbacks* self, SV *code)
-CODE:
-    self->callbacks.autolink = tmh_cb_autolink;
-    hv_stores(self->custom_opaque, "autolink", newSVsv(code));
-
-void
-image(tmh_callbacks* self, SV *code)
-CODE:
-    self->callbacks.image = tmh_cb_image;
-    hv_stores(self->custom_opaque, "image", newSVsv(code));
-
-void
-linebreak(tmh_callbacks* self, SV *code)
-CODE:
-    self->callbacks.linebreak = tmh_cb_linebreak;
-    hv_stores(self->custom_opaque, "linebreak", newSVsv(code));
-
-void
-double_emphasis(tmh_callbacks* self, SV *code)
-CODE:
-    self->callbacks.double_emphasis = tmh_cb_double_emphasis;
-    hv_stores(self->custom_opaque, "double_emphasis", newSVsv(code));
-
-void
-underline(tmh_callbacks* self, SV *code)
-CODE:
-    self->callbacks.underline = tmh_cb_underline;
-    hv_stores(self->custom_opaque, "underline", newSVsv(code));
-
-void
-raw_html_tag(tmh_callbacks* self, SV *code)
-CODE:
-    self->callbacks.raw_html_tag = tmh_cb_raw_html_tag;
-    hv_stores(self->custom_opaque, "raw_html_tag", newSVsv(code));
-
-void
-codespan(tmh_callbacks* self, SV *code)
-CODE:
-    self->callbacks.codespan = tmh_cb_codespan;
-    hv_stores(self->custom_opaque, "codespan", newSVsv(code));
-
-void
-entity(tmh_callbacks* self, SV *code)
-CODE:
-    self->callbacks.entity = tmh_cb_entity;
-    hv_stores(self->custom_opaque, "entity", newSVsv(code));
-
-void
-normal_text(tmh_callbacks* self, SV *code)
-CODE:
-    self->callbacks.normal_text = tmh_cb_normal_text;
-    hv_stores(self->custom_opaque, "normal_text", newSVsv(code));
-
-void
-doc_header(tmh_callbacks* self, SV *code)
-CODE:
-    self->callbacks.doc_header = tmh_cb_doc_header;
-    hv_stores(self->custom_opaque, "doc_header", newSVsv(code));
-
-void
-doc_footer(tmh_callbacks* self, SV *code)
-CODE:
-    self->callbacks.doc_footer = tmh_cb_doc_footer;
-    hv_stores(self->custom_opaque, "doc_footer", newSVsv(code));
+INCLUDE: gen.callback.inc
 
 tmh_callbacks*
 html_renderer(const char *klass, unsigned int render_flags)
