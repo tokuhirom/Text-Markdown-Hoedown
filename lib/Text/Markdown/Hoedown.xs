@@ -25,11 +25,18 @@ extern "C" {
     sv_bless(sv, gv_stashpv(class, 1)); \
     SvREADONLY_on(sv);
 
+#define XS_STATE(type, x) \
+    INT2PTR(type, SvROK(x) ? SvIV(SvRV(x)) : SvIV(x))
 
 typedef enum {
     TMH_CALLBACK_TYPE_HTML,
     TMH_CALLBACK_TYPE_CUSTOM
 } tmh_callback_type;
+
+typedef struct {
+    struct hoedown_markdown *md;
+    SV * cb;
+} tmh_markdown;
 
 typedef struct {
     tmh_callback_type type;
@@ -123,73 +130,50 @@ BOOT:
 
 TYPEMAP: <<HERE
 
-struct hoedown_markdown * T_HOEDOWN_MARKDOWN
-struct hoedown_buffer* T_HOEDOWN_BUFFER
-struct hoedown_callbacks* T_HOEDOWN_CALLBACKS
 tmh_callbacks* T_TMH_CALLBACKS
-const struct hoedown_callbacks* T_HOEDOWN_CALLBACKS
-struct hoedown_html_renderopt* T_HOEDOWN_HTML_RENDEROPT
-hoedown_opaque_t T_HOEDOWN_OPAQUE_T
+tmh_markdown* T_TMH_MARKDOWN
 
 OUTPUT
 
 T_TMH_CALLBACKS
     sv_setref_pv($arg, \"Text::Markdown::Hoedown::Callbacks\", (void*)$var);
 
-T_HOEDOWN_OPAQUE_T
-    sv_setref_pv($arg, \"Text::Markdown::Hoedown::Opaque\", (void*)$var);
-
-T_HOEDOWN_HTML_RENDEROPT
-    sv_setref_pv($arg, \"Text::Markdown::Hoedown::HTMLRenderOpt\", (void*)$var);
-
-T_HOEDOWN_CALLBACKS
-    sv_setref_pv($arg, \"Text::Markdown::Hoedown::Callbacks\", (void*)$var);
-
-T_HOEDOWN_MARKDOWN
+T_TMH_MARKDOWN
     sv_setref_pv($arg, \"Text::Markdown::Hoedown::Markdown\", (void*)$var);
-
-T_HOEDOWN_BUFFER
-    sv_setref_pv($arg, \"Text::Markdown::Hoedown::Buffer\", (void*)$var);
 
 INPUT
 
 T_TMH_CALLBACKS
     $var = INT2PTR($type, SvROK($arg) ? SvIV(SvRV($arg)) : SvIV($arg));
 
-T_HOEDOWN_OPAQUE_T
-    $var = INT2PTR($type, SvROK($arg) ? SvIV(SvRV($arg)) : SvIV($arg));
-
-T_HOEDOWN_HTML_RENDEROPT
-    $var = INT2PTR($type, SvROK($arg) ? SvIV(SvRV($arg)) : SvIV($arg));
-
-T_HOEDOWN_CALLBACKS
-    $var = INT2PTR($type, SvROK($arg) ? SvIV(SvRV($arg)) : SvIV($arg));
-
-T_HOEDOWN_BUFFER
-    $var = INT2PTR($type, SvROK($arg) ? SvIV(SvRV($arg)) : SvIV($arg));
-
-T_HOEDOWN_MARKDOWN
+T_TMH_MARKDOWN
     $var = INT2PTR($type, SvROK($arg) ? SvIV(SvRV($arg)) : SvIV($arg));
 
 HERE
 
 PROTOTYPES: DISABLE
 
-MODULE = Text::Markdown::Hoedown    PACKAGE = Text::Markdown::Hoedown::Markdown PREFIX=hoedown_markdown_
+MODULE = Text::Markdown::Hoedown    PACKAGE = Text::Markdown::Hoedown::Markdown
 
-struct hoedown_markdown *
-hoedown_markdown_new(const char* klass, unsigned int extensions, size_t max_nesting, tmh_callbacks*callbacks)
+tmh_markdown *
+new(const char* klass, unsigned int extensions, size_t max_nesting, SV*callbacks_sv)
+PREINIT:
+    tmh_markdown *tmhmd;
 CODE:
+    tmh_callbacks* callbacks = XS_STATE(tmh_callbacks*, callbacks_sv);
+    Newxz(tmhmd, 1, tmh_markdown);
     if (callbacks->type == TMH_CALLBACK_TYPE_HTML) {
-        RETVAL = hoedown_markdown_new(extensions, max_nesting, &(callbacks->callbacks), callbacks->html_opaque);
+        tmhmd->md = hoedown_markdown_new(extensions, max_nesting, &(callbacks->callbacks), callbacks->html_opaque);
     } else {
-        RETVAL = hoedown_markdown_new(extensions, max_nesting, &(callbacks->callbacks), callbacks->custom_opaque);
+        tmhmd->md = hoedown_markdown_new(extensions, max_nesting, &(callbacks->callbacks), callbacks->custom_opaque);
     }
+    tmhmd->cb = newSVsv(callbacks_sv);
+    RETVAL = tmhmd;
 OUTPUT:
     RETVAL
 
 SV*
-hoedown_markdown_render(struct hoedown_markdown *self, SV *src_sv)
+render(tmh_markdown *self, SV *src_sv)
 PREINIT:
     struct hoedown_buffer* ob;
     const char *src;
@@ -198,7 +182,7 @@ CODE:
     ob = hoedown_buffer_new(64);
 
     src = SvPV(src_sv, src_len);
-    hoedown_markdown_render(ob, src, src_len, self);
+    hoedown_markdown_render(ob, src, src_len, self->md);
 
     SV* ret = newSVpv(hoedown_buffer_cstr(ob), 0);
     if (SvUTF8(src_sv)) {
@@ -210,9 +194,10 @@ OUTPUT:
     RETVAL
 
 void
-DESTROY(struct hoedown_markdown*self)
+DESTROY(tmh_markdown*self)
 CODE:
-    hoedown_markdown_free(self);
+    SvREFCNT_dec(self->cb);
+    hoedown_markdown_free(self->md);
 
 MODULE = Text::Markdown::Hoedown    PACKAGE = Text::Markdown::Hoedown::Callbacks
 
@@ -270,20 +255,4 @@ CODE:
         Safefree(self->html_opaque);
     }
     Safefree(self);
-
-MODULE = Text::Markdown::Hoedown    PACKAGE = Text::Markdown::Hoedown::Buffer PREFIX=hoedown_buffer_
-
-struct hoedown_buffer*
-hoedown_buffer_new(size_t size)
-
-int
-hoedown_buffer_grow(struct hoedown_buffer* self, size_t size)
-
-void
-hoedown_buffer_put(struct hoedown_buffer* self, const char*str, size_t length(str))
-
-void
-DESTROY(struct hoedown_buffer*self)
-CODE:
-    hoedown_buffer_free(self);
 
