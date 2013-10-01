@@ -30,6 +30,12 @@ hoedown is a forking project from sundown.
 
     Options are following:
 
+    - toc\_nesting\_lvl
+
+        Nesting levels for TOC generation.
+
+        (Default: 99)
+
     - extensions
 
         This is bit flag.  You can use the flags by '|' operator.

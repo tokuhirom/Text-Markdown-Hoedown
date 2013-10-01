@@ -2,6 +2,11 @@ Revision history for Perl extension Text-Markdown-Hoedown
 
 {{$NEXT}}
 
+0.05 2013-10-01T02:15:31Z
+
+    - MSVC fix comes from hoedown upstream.
+      (Reported by charsbar++)
+
 0.04 2013-09-30T11:03:15Z
 
     - CONST() macro conflict with MinGW.
