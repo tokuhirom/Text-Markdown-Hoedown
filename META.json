@@ -65,7 +65,7 @@
          "web" : "https://github.com/tokuhirom/Text-Markdown-Hoedown"
       }
    },
-   "version" : "0.05",
+   "version" : "0.06",
    "x_contributors" : [
       "Ben Noordhuis <info@bnoordhuis.nl>",
       "Bruno Michel <bruno.michel@af83.com>",
@@ -107,6 +107,7 @@
       "Anatol Broder <anatol@penibelst.de>",
       "Rick Bradley <bradley@github.com>",
       "Xavier Mendez <jmendeth@gmail.com>",
-      "Devin Torres <devin@devintorr.es>"
+      "Devin Torres <devin@devintorr.es>",
+      "Kenichi Ishigaki <ishigaki@cpan.org>"
    ]
 }

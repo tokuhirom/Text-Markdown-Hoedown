@@ -2,6 +2,12 @@ Revision history for Perl extension Text-Markdown-Hoedown
 
 {{$NEXT}}
 
+0.06 2013-10-01T13:11:59Z
+
+    - set __USE_MINGW_ANSI_STDIO=1 to let vsnprintf in mingw
+      (charsbar)
+    - specify the correct ret value.
+
 0.05 2013-10-01T02:15:31Z
 
     - MSVC fix comes from hoedown upstream.
