@@ -12,6 +12,7 @@ sub new {
     $class->SUPER::new(
         @_,
         c_source => [qw(hoedown/src/)],
+        ($^O eq 'MSWin32' ? (extra_compiler_flags => ['-D__USE_MINGW_ANSI_STDIO=1']) : ()),
     );
 }
 
