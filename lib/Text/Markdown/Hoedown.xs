@@ -57,9 +57,6 @@ typedef void* hoedown_opaque_t;
     }
 
 #define CB_HEADER(key) \
-    dTHX; dSP; bool is_null = 0; \
-    SV** rcb = hv_fetch((HV*)opaque, key, strlen(key), 0); \
-    if (!rcb) { return; } \
     SV* cb = *rcb; \
     \
     ENTER; \

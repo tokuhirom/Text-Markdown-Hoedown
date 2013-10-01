@@ -11,6 +11,13 @@ my $CB_C = <<'...';
 
 ? for my $cb (@callbacks) {
 <?= $cb->{type} ?> tmh_cb_<?= $cb->{name} ?>(<?= $cb->{params} ?>) {
+    dTHX; dSP; bool is_null = 0;
+    SV** rcb = hv_fetchs((HV*)opaque, "<?= $cb->{name} ?>", 0);
+    <? if ($cb->{type} eq 'void') { ?>
+    if (!rcb) { return; }
+    <? } else { ?>
+    if (!rcb) { return 0; }
+    <? } ?>
     CB_HEADER("<?= $cb->{name} ?>");
     <? for my $a (@{$cb->{args}}) { ?>
         <?= $a ?>;
