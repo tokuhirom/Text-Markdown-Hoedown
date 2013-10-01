@@ -216,7 +216,7 @@ OUTPUT:
 INCLUDE: gen.callback.inc
 
 tmh_callbacks*
-html_renderer(const char *klass, unsigned int render_flags)
+html_renderer(const char *klass, unsigned int render_flags, int toc_nesting_lvl)
 PREINIT:
     tmh_callbacks* self;
 CODE:
@@ -224,9 +224,7 @@ CODE:
     Newxz(self->html_opaque, 1, struct hoedown_html_renderopt);
     self->type = TMH_CALLBACK_TYPE_HTML;
 
-    hoedown_html_renderer(&(self->callbacks), self->html_opaque, render_flags);
-    /* hoedown should provide API for setting nesting_level. But it doesn't provide. */
-    self->html_opaque->toc_data.nesting_level = 99;
+    hoedown_html_renderer(&(self->callbacks), self->html_opaque, render_flags, toc_nesting_lvl);
     RETVAL = self;
 OUTPUT:
     RETVAL

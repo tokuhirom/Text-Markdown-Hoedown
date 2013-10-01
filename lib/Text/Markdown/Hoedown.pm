@@ -17,14 +17,16 @@ XSLoader::load(__PACKAGE__, $VERSION);
 sub markdown {
     my $str = shift;
     my %args = (
-        html_options => 0,
-        extensions   => 0,
-        max_nesting  => 16,
+        html_options    => 0,
+        extensions      => 0,
+        max_nesting     => 16,
+        toc_nesting_lvl => 99,
         @_,
     );
 
     my $cb = Text::Markdown::Hoedown::Callbacks->html_renderer(
         $args{html_options},
+        $args{toc_nesting_lvl},
     );
     my $md = Text::Markdown::Hoedown::Markdown->new($args{extensions}, $args{max_nesting}, $cb);
     return $md->render($str);
@@ -33,9 +35,9 @@ sub markdown {
 sub markdown_toc {
     my $str = shift;
     my %args = (
-        nesting_level => 6,
-        extensions    => 0,
-        max_nesting   => 16,
+        nesting_level   => 6,
+        extensions      => 0,
+        max_nesting     => 16,
         @_,
     );
 
@@ -87,6 +89,12 @@ Rendering markdown.
 Options are following:
 
 =over 4
+
+=item toc_nesting_lvl
+
+Nesting levels for TOC generation.
+
+(Default: 99)
 
 =item extensions
 
