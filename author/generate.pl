@@ -5,6 +5,7 @@ use utf8;
 use 5.010000;
 use autodie;
 use Text::MicroTemplate;
+use Text::MicroTemplate::File;
 
 my $CB_C = <<'...';
 ? my @callbacks = @_;
@@ -49,6 +50,7 @@ sub main {
     my @callbacks = scan_callbacks();
     render_c(@callbacks);
     render_inc(@callbacks);
+    render_callbacks_pod(@callbacks);
 }
 
 sub render_c {
@@ -71,6 +73,16 @@ sub render_inc {
     spew('lib/Text/Markdown/gen.callback.inc', $c);
 }
 
+sub render_callbacks_pod {
+    my @callbacks = @_;
+    my $tmt = Text::MicroTemplate::File->new(
+        escape_func => sub { shift },
+        include_path => 'author/tmpl/',
+    );
+    my $c = $tmt->render_file('Callbacks.pod', @callbacks);
+    spew('lib/Text/Markdown/Hoedown/Callbacks.pod', $c);
+}
+
 sub spew {
     my $fname = shift;
     open my $fh, '>', $fname
@@ -90,17 +102,22 @@ sub scan_callbacks {
             shift @opts;
             pop @opts;
             my @args;
+            my @pp_args;
             for (@opts) {
                 s/\A\s*//;
                 s/\s*\z//;
                 if ($_ =~ /\Aconst\s+struct hoedown_buffer \*(\w+)\z/) {
                     push @args, "PUSHBUF($1)";
+                    push @pp_args, "\$$1:Str";
                 } elsif ($_ =~ /\Aint (\w+)\z/) {
                     push @args, "mXPUSHi($1)";
+                    push @pp_args, "\$$1:Int";
                 } elsif ($_ =~ /\Aunsigned int (\w+)\z/) {
                     push @args, "mXPUSHu($1)";
+                    push @pp_args, "\$$1:UInt";
                 } elsif ($_ =~ /\Aenum hoedown_autolink type\z/) {
                     push @args, "mXPUSHi(type)";
+                    push @pp_args, "\$type:Int";
                 } else {
                     die "Unknown: $_";
                 }
@@ -110,6 +127,7 @@ sub scan_callbacks {
                 type   => $type,
                 name   => $name,
                 args   => \@args,
+                pp_args => \@pp_args,
                 params => $opts,
             };
         }
