@@ -3,4 +3,4 @@ badges = ['travis']
 build_class="builder::MyBuilder"
 
 [no_index]
-directory = ["t", "xt", "tools", "builder", "hoedown"]
+directory = ["t", "xt", "tools", "builder", "hoedown", "author"]
