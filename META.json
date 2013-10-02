@@ -19,7 +19,8 @@
          "xt",
          "tools",
          "builder",
-         "hoedown"
+         "hoedown",
+         "author"
       ]
    },
    "prereqs" : {
@@ -65,7 +66,7 @@
          "web" : "https://github.com/tokuhirom/Text-Markdown-Hoedown"
       }
    },
-   "version" : "0.06",
+   "version" : "0.07",
    "x_contributors" : [
       "Ben Noordhuis <info@bnoordhuis.nl>",
       "Bruno Michel <bruno.michel@af83.com>",

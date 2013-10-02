@@ -14,11 +14,11 @@ There is 2 presets.
 
 =over 4
 
-=item my $cb = Text::Markdown::Hoedown::Callbacks->html_renderer($render_flags:UV, $toc_nesting_lvl:IV);
+=item C<< my $cb = Text::Markdown::Hoedown::Callbacks->html_renderer($render_flags:UV, $toc_nesting_lvl:IV); >>
 
 Create a callback object from HTML presets. Arguments are  documented on L<Text::Markdown::Hoedown>.
 
-=item my $cb = Text::Markdown::Hoedown::Callbacks->html_toc_renderer($nesting_level);
+=item C<< my $cb = Text::Markdown::Hoedown::Callbacks->html_toc_renderer($nesting_level); >>
 
 Create a callback object from HTML TOC presets. Arguments are  documented on L<Text::Markdown::Hoedown>.
 
@@ -28,15 +28,15 @@ Create a callback object from HTML TOC presets. Arguments are  documented on L<T
 
 =over 4
 
-=item my $cb = Text::Markdown::Hoedown::Callbacks->new();
+=item C<< my $cb = Text::Markdown::Hoedown::Callbacks->new(); >>
 
 Create new instance.
 
 ? for my $cb (@callbacks) {
 
-=item $cb-><?= $cb->{name} ?>($code: CodeRef)
+=item C<< $cb-><?= $cb->{name} ?>($code: CodeRef) >>
 
-Added handler for <?= $cb->{name} ?>.
+Added handler for C< <?= $cb->{name} ?> >.
 
 Callback function's signature is following:
 

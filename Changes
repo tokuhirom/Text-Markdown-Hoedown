@@ -2,6 +2,11 @@ Revision history for Perl extension Text-Markdown-Hoedown
 
 {{$NEXT}}
 
+0.07 2013-10-02T00:38:28Z
+
+    - Documented low level API.
+      (tokuhirom)
+
 0.06 2013-10-01T13:11:59Z
 
     - set __USE_MINGW_ANSI_STDIO=1 to let vsnprintf in mingw
