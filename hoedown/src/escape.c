@@ -51,7 +51,7 @@ static const char HREF_SAFE[] = {
 };
 
 void
-hoedown_escape_href(struct hoedown_buffer *ob, const uint8_t *src, size_t size)
+hoedown_escape_href(hoedown_buffer *ob, const uint8_t *src, size_t size)
 {
 	static const char hex_chars[] = "0123456789ABCDEF";
 	size_t  i = 0, org;
@@ -85,14 +85,14 @@ hoedown_escape_href(struct hoedown_buffer *ob, const uint8_t *src, size_t size)
 		/* amp appears all the time in URLs, but needs
 		 * HTML-entity escaping to be inside an href */
 		case '&': 
-			BUFPUTSL(ob, "&amp;");
+			HOEDOWN_BUFPUTSL(ob, "&amp;");
 			break;
 
 		/* the single quote is a valid URL character
 		 * according to the standard; it needs HTML
 		 * entity escaping too */
 		case '\'':
-			BUFPUTSL(ob, "&#x27;");
+			HOEDOWN_BUFPUTSL(ob, "&#x27;");
 			break;
 		
 		/* the space can be escaped to %20 or a plus
@@ -157,7 +157,7 @@ static const char *HTML_ESCAPES[] = {
 };
 
 void
-hoedown_escape_html(struct hoedown_buffer *ob, const uint8_t *src, size_t size, int secure)
+hoedown_escape_html(hoedown_buffer *ob, const uint8_t *src, size_t size, int secure)
 {
 	size_t i = 0, org, esc = 0;
 
