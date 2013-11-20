@@ -1,5 +1,5 @@
 
-void tmh_cb_blockcode(struct hoedown_buffer *ob, const struct hoedown_buffer *text, const struct hoedown_buffer *lang, void *opaque) {
+void tmh_cb_blockcode(hoedown_buffer *ob, const hoedown_buffer *text, const hoedown_buffer *lang, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "blockcode", 0);
     
@@ -14,7 +14,7 @@ void tmh_cb_blockcode(struct hoedown_buffer *ob, const struct hoedown_buffer *te
     CB_FOOTER;
     
 }
-void tmh_cb_blockquote(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) {
+void tmh_cb_blockquote(hoedown_buffer *ob, const hoedown_buffer *text, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "blockquote", 0);
     
@@ -27,7 +27,7 @@ void tmh_cb_blockquote(struct hoedown_buffer *ob, const struct hoedown_buffer *t
     CB_FOOTER;
     
 }
-void tmh_cb_blockhtml(struct hoedown_buffer *ob,const  struct hoedown_buffer *text, void *opaque) {
+void tmh_cb_blockhtml(hoedown_buffer *ob,const  hoedown_buffer *text, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "blockhtml", 0);
     
@@ -40,7 +40,7 @@ void tmh_cb_blockhtml(struct hoedown_buffer *ob,const  struct hoedown_buffer *te
     CB_FOOTER;
     
 }
-void tmh_cb_header(struct hoedown_buffer *ob, const struct hoedown_buffer *text, int level, void *opaque) {
+void tmh_cb_header(hoedown_buffer *ob, const hoedown_buffer *text, int level, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "header", 0);
     
@@ -55,7 +55,7 @@ void tmh_cb_header(struct hoedown_buffer *ob, const struct hoedown_buffer *text,
     CB_FOOTER;
     
 }
-void tmh_cb_hrule(struct hoedown_buffer *ob, void *opaque) {
+void tmh_cb_hrule(hoedown_buffer *ob, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "hrule", 0);
     
@@ -66,7 +66,7 @@ void tmh_cb_hrule(struct hoedown_buffer *ob, void *opaque) {
     CB_FOOTER;
     
 }
-void tmh_cb_list(struct hoedown_buffer *ob, const struct hoedown_buffer *text, int flags, void *opaque) {
+void tmh_cb_list(hoedown_buffer *ob, const hoedown_buffer *text, int flags, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "list", 0);
     
@@ -81,7 +81,7 @@ void tmh_cb_list(struct hoedown_buffer *ob, const struct hoedown_buffer *text, i
     CB_FOOTER;
     
 }
-void tmh_cb_listitem(struct hoedown_buffer *ob, const struct hoedown_buffer *text, int flags, void *opaque) {
+void tmh_cb_listitem(hoedown_buffer *ob, const hoedown_buffer *text, int flags, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "listitem", 0);
     
@@ -96,7 +96,7 @@ void tmh_cb_listitem(struct hoedown_buffer *ob, const struct hoedown_buffer *tex
     CB_FOOTER;
     
 }
-void tmh_cb_paragraph(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) {
+void tmh_cb_paragraph(hoedown_buffer *ob, const hoedown_buffer *text, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "paragraph", 0);
     
@@ -109,7 +109,7 @@ void tmh_cb_paragraph(struct hoedown_buffer *ob, const struct hoedown_buffer *te
     CB_FOOTER;
     
 }
-void tmh_cb_table(struct hoedown_buffer *ob, const struct hoedown_buffer *header, const struct hoedown_buffer *body, void *opaque) {
+void tmh_cb_table(hoedown_buffer *ob, const hoedown_buffer *header, const hoedown_buffer *body, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "table", 0);
     
@@ -124,7 +124,7 @@ void tmh_cb_table(struct hoedown_buffer *ob, const struct hoedown_buffer *header
     CB_FOOTER;
     
 }
-void tmh_cb_table_row(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) {
+void tmh_cb_table_row(hoedown_buffer *ob, const hoedown_buffer *text, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "table_row", 0);
     
@@ -137,7 +137,7 @@ void tmh_cb_table_row(struct hoedown_buffer *ob, const struct hoedown_buffer *te
     CB_FOOTER;
     
 }
-void tmh_cb_table_cell(struct hoedown_buffer *ob, const struct hoedown_buffer *text, int flags, void *opaque) {
+void tmh_cb_table_cell(hoedown_buffer *ob, const hoedown_buffer *text, int flags, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "table_cell", 0);
     
@@ -152,7 +152,7 @@ void tmh_cb_table_cell(struct hoedown_buffer *ob, const struct hoedown_buffer *t
     CB_FOOTER;
     
 }
-void tmh_cb_footnotes(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) {
+void tmh_cb_footnotes(hoedown_buffer *ob, const hoedown_buffer *text, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "footnotes", 0);
     
@@ -165,7 +165,7 @@ void tmh_cb_footnotes(struct hoedown_buffer *ob, const struct hoedown_buffer *te
     CB_FOOTER;
     
 }
-void tmh_cb_footnote_def(struct hoedown_buffer *ob, const struct hoedown_buffer *text, unsigned int num, void *opaque) {
+void tmh_cb_footnote_def(hoedown_buffer *ob, const hoedown_buffer *text, unsigned int num, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "footnote_def", 0);
     
@@ -180,7 +180,7 @@ void tmh_cb_footnote_def(struct hoedown_buffer *ob, const struct hoedown_buffer 
     CB_FOOTER;
     
 }
-int tmh_cb_autolink(struct hoedown_buffer *ob, const struct hoedown_buffer *link, enum hoedown_autolink type, void *opaque) {
+int tmh_cb_autolink(hoedown_buffer *ob, const hoedown_buffer *link, enum hoedown_autolink type, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "autolink", 0);
     
@@ -197,7 +197,7 @@ int tmh_cb_autolink(struct hoedown_buffer *ob, const struct hoedown_buffer *link
     return is_null ? 0 : 1;
     
 }
-int tmh_cb_codespan(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) {
+int tmh_cb_codespan(hoedown_buffer *ob, const hoedown_buffer *text, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "codespan", 0);
     
@@ -212,7 +212,7 @@ int tmh_cb_codespan(struct hoedown_buffer *ob, const struct hoedown_buffer *text
     return is_null ? 0 : 1;
     
 }
-int tmh_cb_double_emphasis(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) {
+int tmh_cb_double_emphasis(hoedown_buffer *ob, const hoedown_buffer *text, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "double_emphasis", 0);
     
@@ -227,7 +227,7 @@ int tmh_cb_double_emphasis(struct hoedown_buffer *ob, const struct hoedown_buffe
     return is_null ? 0 : 1;
     
 }
-int tmh_cb_emphasis(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) {
+int tmh_cb_emphasis(hoedown_buffer *ob, const hoedown_buffer *text, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "emphasis", 0);
     
@@ -242,7 +242,7 @@ int tmh_cb_emphasis(struct hoedown_buffer *ob, const struct hoedown_buffer *text
     return is_null ? 0 : 1;
     
 }
-int tmh_cb_underline(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) {
+int tmh_cb_underline(hoedown_buffer *ob, const hoedown_buffer *text, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "underline", 0);
     
@@ -257,7 +257,7 @@ int tmh_cb_underline(struct hoedown_buffer *ob, const struct hoedown_buffer *tex
     return is_null ? 0 : 1;
     
 }
-int tmh_cb_highlight(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) {
+int tmh_cb_highlight(hoedown_buffer *ob, const hoedown_buffer *text, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "highlight", 0);
     
@@ -272,7 +272,7 @@ int tmh_cb_highlight(struct hoedown_buffer *ob, const struct hoedown_buffer *tex
     return is_null ? 0 : 1;
     
 }
-int tmh_cb_quote(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) {
+int tmh_cb_quote(hoedown_buffer *ob, const hoedown_buffer *text, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "quote", 0);
     
@@ -287,7 +287,7 @@ int tmh_cb_quote(struct hoedown_buffer *ob, const struct hoedown_buffer *text, v
     return is_null ? 0 : 1;
     
 }
-int tmh_cb_image(struct hoedown_buffer *ob, const struct hoedown_buffer *link, const struct hoedown_buffer *title, const struct hoedown_buffer *alt, void *opaque) {
+int tmh_cb_image(hoedown_buffer *ob, const hoedown_buffer *link, const hoedown_buffer *title, const hoedown_buffer *alt, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "image", 0);
     
@@ -306,7 +306,7 @@ int tmh_cb_image(struct hoedown_buffer *ob, const struct hoedown_buffer *link, c
     return is_null ? 0 : 1;
     
 }
-int tmh_cb_linebreak(struct hoedown_buffer *ob, void *opaque) {
+int tmh_cb_linebreak(hoedown_buffer *ob, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "linebreak", 0);
     
@@ -319,7 +319,7 @@ int tmh_cb_linebreak(struct hoedown_buffer *ob, void *opaque) {
     return is_null ? 0 : 1;
     
 }
-int tmh_cb_link(struct hoedown_buffer *ob, const struct hoedown_buffer *link, const struct hoedown_buffer *title, const struct hoedown_buffer *content, void *opaque) {
+int tmh_cb_link(hoedown_buffer *ob, const hoedown_buffer *link, const hoedown_buffer *title, const hoedown_buffer *content, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "link", 0);
     
@@ -338,7 +338,7 @@ int tmh_cb_link(struct hoedown_buffer *ob, const struct hoedown_buffer *link, co
     return is_null ? 0 : 1;
     
 }
-int tmh_cb_raw_html_tag(struct hoedown_buffer *ob, const struct hoedown_buffer *tag, void *opaque) {
+int tmh_cb_raw_html_tag(hoedown_buffer *ob, const hoedown_buffer *tag, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "raw_html_tag", 0);
     
@@ -353,7 +353,7 @@ int tmh_cb_raw_html_tag(struct hoedown_buffer *ob, const struct hoedown_buffer *
     return is_null ? 0 : 1;
     
 }
-int tmh_cb_triple_emphasis(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) {
+int tmh_cb_triple_emphasis(hoedown_buffer *ob, const hoedown_buffer *text, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "triple_emphasis", 0);
     
@@ -368,7 +368,7 @@ int tmh_cb_triple_emphasis(struct hoedown_buffer *ob, const struct hoedown_buffe
     return is_null ? 0 : 1;
     
 }
-int tmh_cb_strikethrough(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) {
+int tmh_cb_strikethrough(hoedown_buffer *ob, const hoedown_buffer *text, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "strikethrough", 0);
     
@@ -383,7 +383,7 @@ int tmh_cb_strikethrough(struct hoedown_buffer *ob, const struct hoedown_buffer 
     return is_null ? 0 : 1;
     
 }
-int tmh_cb_superscript(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) {
+int tmh_cb_superscript(hoedown_buffer *ob, const hoedown_buffer *text, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "superscript", 0);
     
@@ -398,7 +398,7 @@ int tmh_cb_superscript(struct hoedown_buffer *ob, const struct hoedown_buffer *t
     return is_null ? 0 : 1;
     
 }
-int tmh_cb_footnote_ref(struct hoedown_buffer *ob, unsigned int num, void *opaque) {
+int tmh_cb_footnote_ref(hoedown_buffer *ob, unsigned int num, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "footnote_ref", 0);
     
@@ -413,7 +413,7 @@ int tmh_cb_footnote_ref(struct hoedown_buffer *ob, unsigned int num, void *opaqu
     return is_null ? 0 : 1;
     
 }
-void tmh_cb_entity(struct hoedown_buffer *ob, const struct hoedown_buffer *entity, void *opaque) {
+void tmh_cb_entity(hoedown_buffer *ob, const hoedown_buffer *entity, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "entity", 0);
     
@@ -426,7 +426,7 @@ void tmh_cb_entity(struct hoedown_buffer *ob, const struct hoedown_buffer *entit
     CB_FOOTER;
     
 }
-void tmh_cb_normal_text(struct hoedown_buffer *ob, const struct hoedown_buffer *text, void *opaque) {
+void tmh_cb_normal_text(hoedown_buffer *ob, const hoedown_buffer *text, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "normal_text", 0);
     
@@ -439,7 +439,7 @@ void tmh_cb_normal_text(struct hoedown_buffer *ob, const struct hoedown_buffer *
     CB_FOOTER;
     
 }
-void tmh_cb_doc_header(struct hoedown_buffer *ob, void *opaque) {
+void tmh_cb_doc_header(hoedown_buffer *ob, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "doc_header", 0);
     
@@ -450,7 +450,7 @@ void tmh_cb_doc_header(struct hoedown_buffer *ob, void *opaque) {
     CB_FOOTER;
     
 }
-void tmh_cb_doc_footer(struct hoedown_buffer *ob, void *opaque) {
+void tmh_cb_doc_footer(hoedown_buffer *ob, void *opaque) {
     dTHX; dSP; bool is_null = 0;
     SV** rcb = hv_fetchs((HV*)opaque, "doc_footer", 0);
     

@@ -1,193 +1,225 @@
 
 void
-blockcode(tmh_callbacks* self, SV *code)
+blockcode(SV* self, SV *code)
 CODE:
-    self->callbacks.blockcode = tmh_cb_blockcode;
-    hv_stores(self->custom_opaque, "blockcode", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->blockcode = tmh_cb_blockcode;
+    hv_stores(renderer->opaque, "blockcode", newSVsv(code));
 
 void
-blockquote(tmh_callbacks* self, SV *code)
+blockquote(SV* self, SV *code)
 CODE:
-    self->callbacks.blockquote = tmh_cb_blockquote;
-    hv_stores(self->custom_opaque, "blockquote", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->blockquote = tmh_cb_blockquote;
+    hv_stores(renderer->opaque, "blockquote", newSVsv(code));
 
 void
-blockhtml(tmh_callbacks* self, SV *code)
+blockhtml(SV* self, SV *code)
 CODE:
-    self->callbacks.blockhtml = tmh_cb_blockhtml;
-    hv_stores(self->custom_opaque, "blockhtml", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->blockhtml = tmh_cb_blockhtml;
+    hv_stores(renderer->opaque, "blockhtml", newSVsv(code));
 
 void
-header(tmh_callbacks* self, SV *code)
+header(SV* self, SV *code)
 CODE:
-    self->callbacks.header = tmh_cb_header;
-    hv_stores(self->custom_opaque, "header", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->header = tmh_cb_header;
+    hv_stores(renderer->opaque, "header", newSVsv(code));
 
 void
-hrule(tmh_callbacks* self, SV *code)
+hrule(SV* self, SV *code)
 CODE:
-    self->callbacks.hrule = tmh_cb_hrule;
-    hv_stores(self->custom_opaque, "hrule", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->hrule = tmh_cb_hrule;
+    hv_stores(renderer->opaque, "hrule", newSVsv(code));
 
 void
-list(tmh_callbacks* self, SV *code)
+list(SV* self, SV *code)
 CODE:
-    self->callbacks.list = tmh_cb_list;
-    hv_stores(self->custom_opaque, "list", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->list = tmh_cb_list;
+    hv_stores(renderer->opaque, "list", newSVsv(code));
 
 void
-listitem(tmh_callbacks* self, SV *code)
+listitem(SV* self, SV *code)
 CODE:
-    self->callbacks.listitem = tmh_cb_listitem;
-    hv_stores(self->custom_opaque, "listitem", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->listitem = tmh_cb_listitem;
+    hv_stores(renderer->opaque, "listitem", newSVsv(code));
 
 void
-paragraph(tmh_callbacks* self, SV *code)
+paragraph(SV* self, SV *code)
 CODE:
-    self->callbacks.paragraph = tmh_cb_paragraph;
-    hv_stores(self->custom_opaque, "paragraph", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->paragraph = tmh_cb_paragraph;
+    hv_stores(renderer->opaque, "paragraph", newSVsv(code));
 
 void
-table(tmh_callbacks* self, SV *code)
+table(SV* self, SV *code)
 CODE:
-    self->callbacks.table = tmh_cb_table;
-    hv_stores(self->custom_opaque, "table", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->table = tmh_cb_table;
+    hv_stores(renderer->opaque, "table", newSVsv(code));
 
 void
-table_row(tmh_callbacks* self, SV *code)
+table_row(SV* self, SV *code)
 CODE:
-    self->callbacks.table_row = tmh_cb_table_row;
-    hv_stores(self->custom_opaque, "table_row", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->table_row = tmh_cb_table_row;
+    hv_stores(renderer->opaque, "table_row", newSVsv(code));
 
 void
-table_cell(tmh_callbacks* self, SV *code)
+table_cell(SV* self, SV *code)
 CODE:
-    self->callbacks.table_cell = tmh_cb_table_cell;
-    hv_stores(self->custom_opaque, "table_cell", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->table_cell = tmh_cb_table_cell;
+    hv_stores(renderer->opaque, "table_cell", newSVsv(code));
 
 void
-footnotes(tmh_callbacks* self, SV *code)
+footnotes(SV* self, SV *code)
 CODE:
-    self->callbacks.footnotes = tmh_cb_footnotes;
-    hv_stores(self->custom_opaque, "footnotes", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->footnotes = tmh_cb_footnotes;
+    hv_stores(renderer->opaque, "footnotes", newSVsv(code));
 
 void
-footnote_def(tmh_callbacks* self, SV *code)
+footnote_def(SV* self, SV *code)
 CODE:
-    self->callbacks.footnote_def = tmh_cb_footnote_def;
-    hv_stores(self->custom_opaque, "footnote_def", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->footnote_def = tmh_cb_footnote_def;
+    hv_stores(renderer->opaque, "footnote_def", newSVsv(code));
 
 void
-autolink(tmh_callbacks* self, SV *code)
+autolink(SV* self, SV *code)
 CODE:
-    self->callbacks.autolink = tmh_cb_autolink;
-    hv_stores(self->custom_opaque, "autolink", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->autolink = tmh_cb_autolink;
+    hv_stores(renderer->opaque, "autolink", newSVsv(code));
 
 void
-codespan(tmh_callbacks* self, SV *code)
+codespan(SV* self, SV *code)
 CODE:
-    self->callbacks.codespan = tmh_cb_codespan;
-    hv_stores(self->custom_opaque, "codespan", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->codespan = tmh_cb_codespan;
+    hv_stores(renderer->opaque, "codespan", newSVsv(code));
 
 void
-double_emphasis(tmh_callbacks* self, SV *code)
+double_emphasis(SV* self, SV *code)
 CODE:
-    self->callbacks.double_emphasis = tmh_cb_double_emphasis;
-    hv_stores(self->custom_opaque, "double_emphasis", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->double_emphasis = tmh_cb_double_emphasis;
+    hv_stores(renderer->opaque, "double_emphasis", newSVsv(code));
 
 void
-emphasis(tmh_callbacks* self, SV *code)
+emphasis(SV* self, SV *code)
 CODE:
-    self->callbacks.emphasis = tmh_cb_emphasis;
-    hv_stores(self->custom_opaque, "emphasis", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->emphasis = tmh_cb_emphasis;
+    hv_stores(renderer->opaque, "emphasis", newSVsv(code));
 
 void
-underline(tmh_callbacks* self, SV *code)
+underline(SV* self, SV *code)
 CODE:
-    self->callbacks.underline = tmh_cb_underline;
-    hv_stores(self->custom_opaque, "underline", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->underline = tmh_cb_underline;
+    hv_stores(renderer->opaque, "underline", newSVsv(code));
 
 void
-highlight(tmh_callbacks* self, SV *code)
+highlight(SV* self, SV *code)
 CODE:
-    self->callbacks.highlight = tmh_cb_highlight;
-    hv_stores(self->custom_opaque, "highlight", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->highlight = tmh_cb_highlight;
+    hv_stores(renderer->opaque, "highlight", newSVsv(code));
 
 void
-quote(tmh_callbacks* self, SV *code)
+quote(SV* self, SV *code)
 CODE:
-    self->callbacks.quote = tmh_cb_quote;
-    hv_stores(self->custom_opaque, "quote", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->quote = tmh_cb_quote;
+    hv_stores(renderer->opaque, "quote", newSVsv(code));
 
 void
-image(tmh_callbacks* self, SV *code)
+image(SV* self, SV *code)
 CODE:
-    self->callbacks.image = tmh_cb_image;
-    hv_stores(self->custom_opaque, "image", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->image = tmh_cb_image;
+    hv_stores(renderer->opaque, "image", newSVsv(code));
 
 void
-linebreak(tmh_callbacks* self, SV *code)
+linebreak(SV* self, SV *code)
 CODE:
-    self->callbacks.linebreak = tmh_cb_linebreak;
-    hv_stores(self->custom_opaque, "linebreak", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->linebreak = tmh_cb_linebreak;
+    hv_stores(renderer->opaque, "linebreak", newSVsv(code));
 
 void
-link(tmh_callbacks* self, SV *code)
+link(SV* self, SV *code)
 CODE:
-    self->callbacks.link = tmh_cb_link;
-    hv_stores(self->custom_opaque, "link", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->link = tmh_cb_link;
+    hv_stores(renderer->opaque, "link", newSVsv(code));
 
 void
-raw_html_tag(tmh_callbacks* self, SV *code)
+raw_html_tag(SV* self, SV *code)
 CODE:
-    self->callbacks.raw_html_tag = tmh_cb_raw_html_tag;
-    hv_stores(self->custom_opaque, "raw_html_tag", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->raw_html_tag = tmh_cb_raw_html_tag;
+    hv_stores(renderer->opaque, "raw_html_tag", newSVsv(code));
 
 void
-triple_emphasis(tmh_callbacks* self, SV *code)
+triple_emphasis(SV* self, SV *code)
 CODE:
-    self->callbacks.triple_emphasis = tmh_cb_triple_emphasis;
-    hv_stores(self->custom_opaque, "triple_emphasis", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->triple_emphasis = tmh_cb_triple_emphasis;
+    hv_stores(renderer->opaque, "triple_emphasis", newSVsv(code));
 
 void
-strikethrough(tmh_callbacks* self, SV *code)
+strikethrough(SV* self, SV *code)
 CODE:
-    self->callbacks.strikethrough = tmh_cb_strikethrough;
-    hv_stores(self->custom_opaque, "strikethrough", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->strikethrough = tmh_cb_strikethrough;
+    hv_stores(renderer->opaque, "strikethrough", newSVsv(code));
 
 void
-superscript(tmh_callbacks* self, SV *code)
+superscript(SV* self, SV *code)
 CODE:
-    self->callbacks.superscript = tmh_cb_superscript;
-    hv_stores(self->custom_opaque, "superscript", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->superscript = tmh_cb_superscript;
+    hv_stores(renderer->opaque, "superscript", newSVsv(code));
 
 void
-footnote_ref(tmh_callbacks* self, SV *code)
+footnote_ref(SV* self, SV *code)
 CODE:
-    self->callbacks.footnote_ref = tmh_cb_footnote_ref;
-    hv_stores(self->custom_opaque, "footnote_ref", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->footnote_ref = tmh_cb_footnote_ref;
+    hv_stores(renderer->opaque, "footnote_ref", newSVsv(code));
 
 void
-entity(tmh_callbacks* self, SV *code)
+entity(SV* self, SV *code)
 CODE:
-    self->callbacks.entity = tmh_cb_entity;
-    hv_stores(self->custom_opaque, "entity", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->entity = tmh_cb_entity;
+    hv_stores(renderer->opaque, "entity", newSVsv(code));
 
 void
-normal_text(tmh_callbacks* self, SV *code)
+normal_text(SV* self, SV *code)
 CODE:
-    self->callbacks.normal_text = tmh_cb_normal_text;
-    hv_stores(self->custom_opaque, "normal_text", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->normal_text = tmh_cb_normal_text;
+    hv_stores(renderer->opaque, "normal_text", newSVsv(code));
 
 void
-doc_header(tmh_callbacks* self, SV *code)
+doc_header(SV* self, SV *code)
 CODE:
-    self->callbacks.doc_header = tmh_cb_doc_header;
-    hv_stores(self->custom_opaque, "doc_header", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->doc_header = tmh_cb_doc_header;
+    hv_stores(renderer->opaque, "doc_header", newSVsv(code));
 
 void
-doc_footer(tmh_callbacks* self, SV *code)
+doc_footer(SV* self, SV *code)
 CODE:
-    self->callbacks.doc_footer = tmh_cb_doc_footer;
-    hv_stores(self->custom_opaque, "doc_footer", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->doc_footer = tmh_cb_doc_footer;
+    hv_stores(renderer->opaque, "doc_footer", newSVsv(code));
 

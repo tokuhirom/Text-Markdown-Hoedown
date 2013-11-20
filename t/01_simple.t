@@ -6,7 +6,7 @@ use Encode;
 
 ok HOEDOWN_EXT_NO_INTRA_EMPHASIS;
 
-isa_ok(Text::Markdown::Hoedown::Callbacks->new(), 'Text::Markdown::Hoedown::Callbacks');
+isa_ok(Text::Markdown::Hoedown::Renderer::HTML->new(0,0), 'Text::Markdown::Hoedown::Renderer::HTML');
 is(markdown("# foo"), qq{<h1 id="toc_0">foo</h1>\n});
 {
     use utf8;

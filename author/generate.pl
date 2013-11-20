@@ -36,10 +36,11 @@ my $CB_INC = <<'...';
 
 ? for my $cb (@callbacks) {
 void
-<?= $cb->{name} ?>(tmh_callbacks* self, SV *code)
+<?= $cb->{name} ?>(SV* self, SV *code)
 CODE:
-    self->callbacks.<?= $cb->{name} ?> = tmh_cb_<?= $cb->{name} ?>;
-    hv_stores(self->custom_opaque, "<?= $cb->{name} ?>", newSVsv(code));
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer-><?= $cb->{name} ?> = tmh_cb_<?= $cb->{name} ?>;
+    hv_stores(renderer->opaque, "<?= $cb->{name} ?>", newSVsv(code));
 
 ? }
 ...
@@ -85,6 +86,7 @@ sub render_callbacks_pod {
 
 sub spew {
     my $fname = shift;
+    print "Writing $fname\n";
     open my $fh, '>', $fname
         or Carp::croak("Can't open '$fname' for writing: '$!'");
     print {$fh} $_[0];
@@ -93,7 +95,7 @@ sub spew {
 sub scan_callbacks {
     open my $fh, '<', 'hoedown/src/markdown.h';
     my $content = do { local $/; <$fh> };
-    $content =~ s/struct hoedown_callbacks {(.*?)}//sm or die "Invalid markdown.h";
+    $content =~ s/struct hoedown_renderer {(.*?)}//sm or die "Invalid markdown.h";
     my @callbacks;
     for my $line (split /\n/, $1) {
         if ($line =~ /\A\s*(.*?)\s+\(\*(\w+)\)\((.*)\);/) {
@@ -106,7 +108,7 @@ sub scan_callbacks {
             for (@opts) {
                 s/\A\s*//;
                 s/\s*\z//;
-                if ($_ =~ /\Aconst\s+struct hoedown_buffer \*(\w+)\z/) {
+                if ($_ =~ /\Aconst\s+(?:struct\s+)?hoedown_buffer\s+\*\s*(\w+)\z/) {
                     push @args, "PUSHBUF($1)";
                     push @pp_args, "\$$1:Str";
                 } elsif ($_ =~ /\Aint (\w+)\z/) {

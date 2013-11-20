@@ -28,27 +28,6 @@ extern "C" {
 #define XS_STATE(type, x) \
     INT2PTR(type, SvROK(x) ? SvIV(SvRV(x)) : SvIV(x))
 
-typedef enum {
-    TMH_CALLBACK_TYPE_HTML,
-    TMH_CALLBACK_TYPE_CUSTOM
-} tmh_callback_type;
-
-typedef struct {
-    struct hoedown_markdown *md;
-    SV * cb;
-} tmh_markdown;
-
-typedef struct {
-    tmh_callback_type type;
-    struct hoedown_callbacks callbacks;
-    union {
-        struct hoedown_html_renderopt* html_opaque;
-        HV * custom_opaque;
-    };
-} tmh_callbacks;
-
-typedef void* hoedown_opaque_t;
-
 #define PUSHBUF(text) \
     if (text) { \
         mXPUSHp(text->data, text->size); \
@@ -127,23 +106,17 @@ BOOT:
 
 TYPEMAP: <<HERE
 
-tmh_callbacks* T_TMH_CALLBACKS
-tmh_markdown* T_TMH_MARKDOWN
+hoedown_renderer* T_H_RENDERER
+hoedown_markdown* T_H_MARKDOWN
 
 OUTPUT
 
-T_TMH_CALLBACKS
-    sv_setref_pv($arg, \"Text::Markdown::Hoedown::Callbacks\", (void*)$var);
-
-T_TMH_MARKDOWN
+T_H_MARKDOWN
     sv_setref_pv($arg, \"Text::Markdown::Hoedown::Markdown\", (void*)$var);
 
 INPUT
 
-T_TMH_CALLBACKS
-    $var = INT2PTR($type, SvROK($arg) ? SvIV(SvRV($arg)) : SvIV($arg));
-
-T_TMH_MARKDOWN
+T_H_MARKDOWN
     $var = INT2PTR($type, SvROK($arg) ? SvIV(SvRV($arg)) : SvIV($arg));
 
 HERE
@@ -152,25 +125,16 @@ PROTOTYPES: DISABLE
 
 MODULE = Text::Markdown::Hoedown    PACKAGE = Text::Markdown::Hoedown::Markdown
 
-tmh_markdown *
-new(const char* klass, unsigned int extensions, size_t max_nesting, SV*callbacks_sv)
-PREINIT:
-    tmh_markdown *tmhmd;
+hoedown_markdown *
+new(const char* klass, unsigned int extensions, size_t max_nesting, SV* renderer_sv)
 CODE:
-    tmh_callbacks* callbacks = XS_STATE(tmh_callbacks*, callbacks_sv);
-    Newxz(tmhmd, 1, tmh_markdown);
-    if (callbacks->type == TMH_CALLBACK_TYPE_HTML) {
-        tmhmd->md = hoedown_markdown_new(extensions, max_nesting, &(callbacks->callbacks), callbacks->html_opaque);
-    } else {
-        tmhmd->md = hoedown_markdown_new(extensions, max_nesting, &(callbacks->callbacks), callbacks->custom_opaque);
-    }
-    tmhmd->cb = newSVsv(callbacks_sv);
-    RETVAL = tmhmd;
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, renderer_sv);
+    RETVAL = hoedown_markdown_new(extensions, max_nesting, renderer);
 OUTPUT:
     RETVAL
 
 SV*
-render(tmh_markdown *self, SV *src_sv)
+render(hoedown_markdown *self, SV *src_sv)
 PREINIT:
     struct hoedown_buffer* ob;
     const char *src;
@@ -179,7 +143,7 @@ CODE:
     ob = hoedown_buffer_new(64);
 
     src = SvPV(src_sv, src_len);
-    hoedown_markdown_render(ob, src, src_len, self->md);
+    hoedown_markdown_render(ob, src, src_len, self);
 
     SV* ret = newSVpv(hoedown_buffer_cstr(ob), 0);
     if (SvUTF8(src_sv)) {
@@ -190,64 +154,60 @@ CODE:
 OUTPUT:
     RETVAL
 
+MODULE = Text::Markdown::Hoedown    PACKAGE = Text::Markdown::Hoedown::Renderer::HTML
+
 void
-DESTROY(tmh_markdown*self)
-CODE:
-    SvREFCNT_dec(self->cb);
-    hoedown_markdown_free(self->md);
+new(const char* klass, unsigned int render_flags, int nesting_level)
+PPCODE:
+    hoedown_renderer * renderer = hoedown_html_renderer_new(
+        render_flags, nesting_level
+    );
+    ST(0) = sv_newmortal();
+    sv_setref_pv(ST(0), "Text::Markdown::Hoedown::Renderer::HTML", (void*)renderer);
+    XSRETURN(1);
 
-MODULE = Text::Markdown::Hoedown    PACKAGE = Text::Markdown::Hoedown::Callbacks
-
-tmh_callbacks*
-new(const char*CLASS)
-PREINIT:
-    tmh_callbacks* self;
+void
+DESTROY(SV* this)
 CODE:
-    Newxz(self, 1, tmh_callbacks);
-    self->type = TMH_CALLBACK_TYPE_CUSTOM;
-    self->custom_opaque = newHV();
-    RETVAL = self;
-OUTPUT:
-    RETVAL
+    hoedown_renderer* self = INT2PTR(hoedown_renderer*, SvROK(this) ? SvIV(SvRV(this)) : SvIV(this));
+    hoedown_html_renderer_free(self);
+
+MODULE = Text::Markdown::Hoedown    PACKAGE = Text::Markdown::Hoedown::Renderer::HTMLTOC
+
+void
+new(const char* klass, int nesting_level)
+PPCODE:
+    hoedown_renderer * renderer = hoedown_html_toc_renderer_new(
+        nesting_level
+    );
+    ST(0) = sv_newmortal();
+    sv_setref_pv(ST(0), "Text::Markdown::Hoedown::Renderer::HTMLTOC", (void*)renderer);
+    XSRETURN(1);
+
+void
+DESTROY(SV* this)
+CODE:
+    hoedown_renderer* self = INT2PTR(hoedown_renderer*, SvROK(this) ? SvIV(SvRV(this)) : SvIV(this));
+    hoedown_html_renderer_free(self);
+
+MODULE = Text::Markdown::Hoedown    PACKAGE = Text::Markdown::Hoedown::Renderer::Callback
+
+void
+new(const char* klass)
+PPCODE:
+    hoedown_renderer * renderer;
+    Newxz(renderer, 1, hoedown_renderer);
+    renderer->opaque = newHV();
+    ST(0) = sv_newmortal();
+    sv_setref_pv(ST(0), "Text::Markdown::Hoedown::Renderer::Callback", (void*)renderer);
+    XSRETURN(1);
+
+void
+DESTROY(SV* this)
+CODE:
+    hoedown_renderer* self = INT2PTR(hoedown_renderer*, SvROK(this) ? SvIV(SvRV(this)) : SvIV(this));
+    SvREFCNT_dec(self->opaque);
+    free(self);
 
 INCLUDE: gen.callback.inc
-
-tmh_callbacks*
-html_renderer(const char *klass, unsigned int render_flags, int toc_nesting_lvl)
-PREINIT:
-    tmh_callbacks* self;
-CODE:
-    Newxz(self, 1, tmh_callbacks);
-    Newxz(self->html_opaque, 1, struct hoedown_html_renderopt);
-    self->type = TMH_CALLBACK_TYPE_HTML;
-
-    hoedown_html_renderer(&(self->callbacks), self->html_opaque, render_flags, toc_nesting_lvl);
-    RETVAL = self;
-OUTPUT:
-    RETVAL
-
-tmh_callbacks*
-html_toc_renderer(const char* klass, int nesting_level)
-PREINIT:
-    tmh_callbacks* self;
-CODE:
-    Newxz(self, 1, tmh_callbacks);
-    Newxz(self->html_opaque, 1, struct hoedown_html_renderopt);
-    self->type = TMH_CALLBACK_TYPE_HTML;
-
-    hoedown_html_toc_renderer(&(self->callbacks), self->html_opaque, nesting_level);
-
-    RETVAL = self;
-OUTPUT:
-    RETVAL
-
-void
-DESTROY(tmh_callbacks* self)
-CODE:
-    if (self->type == TMH_CALLBACK_TYPE_CUSTOM) {
-        SvREFCNT_dec(self->custom_opaque);
-    } else {
-        Safefree(self->html_opaque);
-    }
-    Safefree(self);
 

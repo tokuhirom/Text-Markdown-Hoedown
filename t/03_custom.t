@@ -5,7 +5,7 @@ use Test::More;
 use Text::Markdown::Hoedown;
 use B qw(perlstring);
 
-my $cb = Text::Markdown::Hoedown::Callbacks->new();
+my $cb = Text::Markdown::Hoedown::Renderer::Callback->new();
 ok $cb;
 $cb->doc_header(sub {
     join('',

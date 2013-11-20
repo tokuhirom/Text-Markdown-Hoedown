@@ -20,7 +20,7 @@ sub ACTION_code {
     my $self = shift;
 
     if (-d '.git') {
-        system($^X, 'author/generate.pl');
+#       system($^X, 'author/generate.pl');
     }
 
     $self->SUPER::ACTION_code();
