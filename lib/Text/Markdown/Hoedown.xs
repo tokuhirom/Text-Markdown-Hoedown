@@ -141,6 +141,9 @@ PREINIT:
     STRLEN src_len;
 CODE:
     ob = hoedown_buffer_new(64);
+    if (!ob) {
+        croak("Cannot create new hoedown_buffer(malloc failed)");
+    }
 
     src = SvPV(src_sv, src_len);
     hoedown_markdown_render(ob, src, src_len, self);
