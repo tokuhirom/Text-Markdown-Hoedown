@@ -210,7 +210,7 @@ DESTROY(SV* this)
 CODE:
     hoedown_renderer* self = INT2PTR(hoedown_renderer*, SvROK(this) ? SvIV(SvRV(this)) : SvIV(this));
     SvREFCNT_dec(self->opaque);
-    free(self);
+    Safefree(self);
 
 INCLUDE: gen.callback.inc
 
