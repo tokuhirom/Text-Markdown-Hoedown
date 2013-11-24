@@ -2,6 +2,12 @@ Revision history for Perl extension Text-Markdown-Hoedown
 
 {{$NEXT}}
 
+1.01 2013-11-24T10:17:40Z
+
+    - Fixed memory allocation related bug.
+      (It affects under the -Dusemymalloc=y environments)
+      (supported by bingos++)
+
 1.00 2013-11-20T11:38:19Z
 
     [INCOMPATIBLE CHANGES]

@@ -12,7 +12,7 @@ use warnings;
 use Getopt::Long;
 use Benchmark;
 
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 # Sat 24 Dec 2005
 
 my $time_start = new Benchmark;
