@@ -1,4 +1,3 @@
-
 void
 blockcode(SV* self, SV *code)
 CODE:
@@ -61,6 +60,20 @@ CODE:
     hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
     renderer->table = tmh_cb_table;
     hv_stores(renderer->opaque, "table", newSVsv(code));
+
+void
+table_header(SV* self, SV *code)
+CODE:
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->table_header = tmh_cb_table_header;
+    hv_stores(renderer->opaque, "table_header", newSVsv(code));
+
+void
+table_body(SV* self, SV *code)
+CODE:
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->table_body = tmh_cb_table_body;
+    hv_stores(renderer->opaque, "table_body", newSVsv(code));
 
 void
 table_row(SV* self, SV *code)
@@ -161,11 +174,18 @@ CODE:
     hv_stores(renderer->opaque, "link", newSVsv(code));
 
 void
-raw_html_tag(SV* self, SV *code)
+math(SV* self, SV *code)
 CODE:
     hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
-    renderer->raw_html_tag = tmh_cb_raw_html_tag;
-    hv_stores(renderer->opaque, "raw_html_tag", newSVsv(code));
+    renderer->math = tmh_cb_math;
+    hv_stores(renderer->opaque, "math", newSVsv(code));
+
+void
+raw_html(SV* self, SV *code)
+CODE:
+    hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
+    renderer->raw_html = tmh_cb_raw_html;
+    hv_stores(renderer->opaque, "raw_html", newSVsv(code));
 
 void
 triple_emphasis(SV* self, SV *code)
@@ -222,4 +242,3 @@ CODE:
     hoedown_renderer* renderer = XS_STATE(hoedown_renderer*, self);
     renderer->doc_footer = tmh_cb_doc_footer;
     hv_stores(renderer->opaque, "doc_footer", newSVsv(code));
-
