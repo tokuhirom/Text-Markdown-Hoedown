@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/tokuhirom/Text-Markdown-Hoedown.png?branch=master)](https://travis-ci.org/tokuhirom/Text-Markdown-Hoedown)
+[![Build Status](https://travis-ci.org/tokuhirom/Text-Markdown-Hoedown.svg?branch=master)](https://travis-ci.org/tokuhirom/Text-Markdown-Hoedown)
 # NAME
 
 Text::Markdown::Hoedown - hoedown for Perl5
@@ -41,86 +41,90 @@ hoedown is a forking project from sundown.
         This is bit flag.  You can use the flags by '|' operator.
         Values are following:
 
-         * HOEDOWN\_EXT\_TABLES
+        - HOEDOWN\_EXT\_TABLES
 
-             Parse PHP-Markdown style tables.
+            Parse PHP-Markdown style tables.
 
-         * HOEDOWN\_EXT\_FENCED\_CODE
+        - HOEDOWN\_EXT\_FENCED\_CODE
 
-             Parse fenced code blocks.
+            Parse fenced code blocks.
 
-         * HOEDOWN\_EXT\_FOOTNOTES
+        - HOEDOWN\_EXT\_FOOTNOTES
 
-             Parse footnotes.
+            Parse footnotes.
 
-         * HOEDOWN\_EXT\_AUTOLINK
+        - HOEDOWN\_EXT\_AUTOLINK
 
-             Automatically turn safe URLs into links.
+            Automatically turn safe URLs into links.
 
-         * HOEDOWN\_EXT\_STRIKETHROUGH
+        - HOEDOWN\_EXT\_STRIKETHROUGH
 
-             Parse `~~stikethrough~~` spans.
+            Parse ~~stikethrough~~ spans.
 
-         * HOEDOWN\_EXT\_UNDERLINE
+        - HOEDOWN\_EXT\_UNDERLINE
 
-             Parse `_underline_` instead of emphasis.
+            Parse \_underline\_ instead of emphasis.
 
-         * HOEDOWN\_EXT\_HIGHLIGHT
+        - HOEDOWN\_EXT\_HIGHLIGHT
 
-             Parse `==highlight==` spans.
+            Parse ==highlight== spans.
 
-         * HOEDOWN\_EXT\_QUOTE
+        - HOEDOWN\_EXT\_QUOTE
 
-             Render "quotes" as `<q>`quotes`</q>`.
+            Render "quotes" as &lt;q>quotes&lt;/q>.
 
-         * HOEDOWN\_EXT\_SUPERSCRIPT
+        - HOEDOWN\_EXT\_SUPERSCRIPT
 
-             Parse `super^script`.
+            Parse super^script.
 
-         * HOEDOWN\_EXT\_MATH
+        - HOEDOWN\_EXT\_MATH
 
-             Parse TeX $$math$$ syntax, Kramdown style.
+            Parse TeX $$math$$ syntax, Kramdown style.
 
-         * HOEDOWN\_EXT\_NO\_INTRA\_EMPHASIS
+        - HOEDOWN\_EXT\_NO\_INTRA\_EMPHASIS
 
-             Disable `emphasis_between_words`.
+            Disable emphasis\_between\_words.
 
-         * HOEDOWN\_EXT\_SPACE\_HEADERS
+        - HOEDOWN\_EXT\_SPACE\_HEADERS
 
-             Require a space after '#' in headers.
+            Require a space after '#' in headers.
 
-         * HOEDOWN\_EXT\_MATH\_EXPLICIT
+        - HOEDOWN\_EXT\_MATH\_EXPLICIT
 
-             Instead of guessing by context, parse $inline math$ and $$always block math$$ (requires HOEDOWN\_EXT\_MATH).
+            Instead of guessing by context, parse $inline math$ and $$always block math$$ (requires HOEDOWN\_EXT\_MATH).
 
-         * HOEDOWN\_EXT\_DISABLE\_INDENTED\_CODE
+        - HOEDOWN\_EXT\_DISABLE\_INDENTED\_CODE
 
-             Don't parse indented code blocks.
+            Don't parse indented code blocks.
 
     - html\_options
 
         This is bit flag.  You can use the flags by '|' operator.
         Values are following:
 
-         * HOEDOWN\_HTML\_SKIP\_HTML
+        - HOEDOWN\_HTML\_SKIP\_HTML
 
-             Strip all HTML tags.
+            Strip all HTML tags.
 
-         * HOEDOWN\_HTML\_ESCAPE
+        - HOEDOWN\_HTML\_ESCAPE
 
-             Escape all HTML.
+            Escape all HTML.
 
-         * HOEDOWN\_HTML\_HARD\_WRAP
+        - HOEDOWN\_HTML\_HARD\_WRAP
 
-             Render each linebreak as `<br>`.
+            Render each linebreak as &lt;br>.
 
-         * HOEDOWN\_HTML\_USE\_XHTML
+        - HOEDOWN\_HTML\_USE\_XHTML
 
-             Render XHTML.
+            Render XHTML.
 
     - max\_nesting
 
         I don't know what this do.
+
+- max\_nesting
+
+    I don't know what this do.
 
 - `markdown_toc($src:Str, %opts) :Str`
 
@@ -164,3 +168,11 @@ it under the same terms as Perl itself.
 # AUTHOR
 
 tokuhirom <tokuhirom@gmail.com>
+
+# POD ERRORS
+
+Hey! **The above document had some coding errors, which are explained below:**
+
+- Around line 209:
+
+    '=item' outside of any '=over'
