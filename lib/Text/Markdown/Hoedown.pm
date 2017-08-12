@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use parent qw(Exporter);
 
-our $VERSION = "1.01";
+our $VERSION = "1.02";
 
 our @EXPORT = qw(
     markdown
@@ -191,12 +191,6 @@ Render each linebreak as E<lt>brE<gt>.
 =item HOEDOWN_HTML_USE_XHTML
 
 Render XHTML.
-
-=back
-
-=item max_nesting
-
-I don't know what this do.
 
 =back
 

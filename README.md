@@ -122,10 +122,6 @@ hoedown is a forking project from sundown.
 
         I don't know what this do.
 
-- max\_nesting
-
-    I don't know what this do.
-
 - `markdown_toc($src:Str, %opts) :Str`
 
     Generate TOC HTML from `$str`.
@@ -168,11 +164,3 @@ it under the same terms as Perl itself.
 # AUTHOR
 
 tokuhirom <tokuhirom@gmail.com>
-
-# POD ERRORS
-
-Hey! **The above document had some coding errors, which are explained below:**
-
-- Around line 209:
-
-    '=item' outside of any '=over'

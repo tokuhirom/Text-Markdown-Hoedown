@@ -9,7 +9,6 @@ use strict;
 use warnings;
 use utf8;
 
-BEGIN { push @INC, '.' }
 use builder::MyBuilder;
 use File::Basename;
 use File::Spec;
